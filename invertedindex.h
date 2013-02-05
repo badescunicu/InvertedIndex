@@ -20,7 +20,7 @@ typedef struct Entry {
 /* Nod pentru o listă simplu înlănțuită */
 typedef struct Node {
     struct Node_t    *next;
-    Entry_t          data;
+    Entry_t          *data;
 } Node_t;
 
 /* Reține o mapare Cheie - Valoare (în cazul nostru char* - Array_t)
@@ -44,7 +44,7 @@ unsigned long hash(unsigned char *str)
 	unsigned long hash = 5381;
 	int c;
 
-	while(c = *str++) {
+	while((c = *str++)) {
  		hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
 	}
 
