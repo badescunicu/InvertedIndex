@@ -15,5 +15,5 @@ Map_t* initialize_map(int size) {
 }
 
 void solve() {
-  printf("a intrat pe solve\n");
+
 }
