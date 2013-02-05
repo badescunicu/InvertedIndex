@@ -47,6 +47,34 @@ void put_doc(Map_t *map, char *key, int docID) {
     bucket->next = NULL;
     map->buckets[hash((unsigned char*)key) % map->size] = bucket;
   }
+  else {
+    int found = 0;
+    int pos;
+    Node_t *prev;
+    prev = bucket;
+    while(bucket) {
+      if(strcmp(bucket->data->word, key) == 0) {
+        found = 1;
+        if(bucket->data->documents.n == bucket->data->documents.cap - 1) {
+          bucket->data->documents.cap *= 2;
+          bucket->data->documents.v = realloc(bucket->data->documents.v, 
+                                      bucket->data->documents.cap);
+        }
+        bucket->data->documents.n += 1;
+        pos = bucket->data->documents.n;
+        printf("pos:%d\n", pos);
+        bucket->data->documents.v[pos] = docID;
+      }
+      prev = bucket;
+      bucket = bucket->next;
+    }
+    if(!found) {
+      Node_t *new_node = (Node_t*)malloc(sizeof(Node_t));
+      new_node->data = initialize_entry(key, docID);
+      new_node->next = NULL;
+      prev->next = new_node;
+    }
+  }
 }
 
 void solve() {
