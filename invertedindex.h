@@ -1,9 +1,6 @@
 #ifndef __INVERTEDINDEX_H__
 #define __INVERTEDINDEX_H__
 
-#include <stdio.h>
-#include <stdlib.h>
-
 /* Vector de întregi
  * v   - vectorul
  * n   - numărul de elemente
@@ -78,6 +75,10 @@ Array_t reunion(const Array_t files1, const Array_t files2);
 
 /* Initializeaza dictionarul cu 'size' buckets */
 Map_t* initialize_map(int size);
+
+/* Initializeaza o intrare din bucket cu un cuvant si cu primul
+ * fisier in care se gaseste cuvantul */
+Entry_t* initialize_entry(char *s, int file_num);
 
 /* Functia ce va contine rezolvarea problemei. Tot aici va fi construit si
  * dictionarul pe baza regulilor stabilite. */
