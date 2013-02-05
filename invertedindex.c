@@ -10,9 +10,9 @@ int main() {
   printf("%d %d %s\n", data->documents.cap, data->documents.v[0],
          data->word);
   map = initialize_map(20);
-  put_doc(map, "test", 2);
+  put_doc(map, "test", 4);
   printf("%d %s\n", 
-        map->buckets[hash((unsigned char*)"test") % 20]->data->documents.v[0],
+        map->buckets[hash((unsigned char*)"test") % 20]->data->documents.v[3],
         map->buckets[hash((unsigned char*)"test") % 20]->data->word);
 	solve();
 	return 0;
@@ -55,15 +55,18 @@ void put_doc(Map_t *map, char *key, int docID) {
     while(bucket) {
       if(strcmp(bucket->data->word, key) == 0) {
         found = 1;
-        if(bucket->data->documents.n == bucket->data->documents.cap - 1) {
-          bucket->data->documents.cap *= 2;
-          bucket->data->documents.v = realloc(bucket->data->documents.v, 
-                                      bucket->data->documents.cap);
+        if(!is_in_array(bucket->data->documents, docID)) {
+          if(bucket->data->documents.n == bucket->data->documents.cap - 1) {
+            bucket->data->documents.cap *= 2;
+            bucket->data->documents.v = realloc(bucket->data->documents.v, 
+                                        bucket->data->documents.cap);
+          }
+          bucket->data->documents.n += 1;
+          pos = bucket->data->documents.n;
+          //printf("pos:%d\n", pos);
+          bucket->data->documents.v[pos] = docID;
         }
-        bucket->data->documents.n += 1;
-        pos = bucket->data->documents.n;
-        printf("pos:%d\n", pos);
-        bucket->data->documents.v[pos] = docID;
+        break;
       }
       prev = bucket;
       bucket = bucket->next;
@@ -75,6 +78,14 @@ void put_doc(Map_t *map, char *key, int docID) {
       prev->next = new_node;
     }
   }
+}
+
+int is_in_array(Array_t documents, int docID) {
+  int i;
+  for(i = 0; i <= documents.n; i++)
+    if(documents.v[i] == docID)
+      return 1;
+  return 0;
 }
 
 void solve() {

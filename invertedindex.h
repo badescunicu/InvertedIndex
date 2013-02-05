@@ -80,6 +80,9 @@ Map_t* initialize_map(int size);
  * fisier in care se gaseste cuvantul */
 Entry_t* initialize_entry(char *s, int file_num);
 
+/* Verifica daca un numar este intr-un Array_t */
+int is_in_array(Array_t documents, int docID);
+
 /* Functia ce va contine rezolvarea problemei. Tot aici va fi construit si
  * dictionarul pe baza regulilor stabilite. */
 void solve();
