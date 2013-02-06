@@ -2,18 +2,18 @@
 #include <stdlib.h>
 #include <string.h>
 #include "invertedindex.h"
+#define NUMBER_OF_BUCKETS 100
+
 
 int main() {
-  Map_t *map;
-  Entry_t *data;
-  data = initialize_entry("token1", 2);
-  printf("%d %d %s\n", data->documents.cap, data->documents.v[0],
-         data->word);
-  map = initialize_map(20);
-  put_doc(map, "test", 4);
+ /* put_doc(map, "test", 4);
+  put_doc(map, "test2", 5);
   printf("%d %s\n", 
-        map->buckets[hash((unsigned char*)"test") % 20]->data->documents.v[3],
-        map->buckets[hash((unsigned char*)"test") % 20]->data->word);
+        map->buckets[hash((unsigned char*)"test") %
+                    NUMBER_OF_BUCKETS]->data->documents.v[0],
+        map->buckets[hash((unsigned char*)"test") %
+                    NUMBER_OF_BUCKETS]->data->word);
+  */
 	solve();
 	return 0;
 }
@@ -63,7 +63,7 @@ void put_doc(Map_t *map, char *key, int docID) {
           }
           bucket->data->documents.n += 1;
           pos = bucket->data->documents.n;
-          //printf("pos:%d\n", pos);
+          /*printf("pos:%d\n", pos);*/
           bucket->data->documents.v[pos] = docID;
         }
         break;
@@ -88,6 +88,43 @@ int is_in_array(Array_t documents, int docID) {
   return 0;
 }
 
+Array_t get_docs(Map_t *map, char *key) {
+  Node_t *start_node;
+  start_node = map->buckets[hash((unsigned char*)key) % map->size];
+  while(start_node) {
+    if(strcmp(start_node->data->word, key) == 0) {
+      return start_node->data->documents;
+    }
+    start_node = start_node->next;
+  }
+}
+
 void solve() {
+  FILE *fin = fopen("date.in", "r");
+  int i, lines;
+  char **files, tmp[150];
+  Map_t *map;
+  Array_t docIDs;
+
+  map = initialize_map(NUMBER_OF_BUCKETS);
+  fgets(tmp, 150, fin);
+  sscanf(tmp, "%d", &lines);
+  files = (char**)malloc(lines * sizeof(char*));
+  for(i = 0; i < lines; i++) {
+    fgets(tmp, 150, fin);
+    tmp[strlen(tmp) - 1] = '\0';
+    files[i] = (char*)malloc((sizeof(tmp) + 1) * sizeof(char));
+    strcpy(files[i], tmp);
+    printf("%s\n", files[i]);
+  }
+  fclose(fin);
+
+  for(i = 0; i < lines; i++) {
+    fin = fopen(files[i], "r");
+    while(fscanf(fin, "%s", tmp) != EOF) {
+      put_doc(map, tmp, i);
+    }
+    fclose(fin);
+  }
 
 }
