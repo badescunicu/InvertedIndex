@@ -104,7 +104,6 @@ void solve() {
   int i, lines;
   char **files, tmp[150];
   Map_t *map;
-  Array_t docIDs;
 
   map = initialize_map(NUMBER_OF_BUCKETS);
   fgets(tmp, 150, fin);
@@ -126,5 +125,23 @@ void solve() {
     }
     fclose(fin);
   }
+  print_map(map);
+}
 
+void print_map(Map_t *map) {
+  int i, j;
+  Node_t *start_bucket;
+  for(i = 0; i < NUMBER_OF_BUCKETS; i++) {
+    if (map->buckets[i]) {
+      start_bucket = map->buckets[i];
+      while(start_bucket) {
+        printf("%s apare in : ", start_bucket->data->word);
+        for(j = 0; j <= start_bucket->data->documents.n; j++) {
+          printf("%d ", start_bucket->data->documents.v[j]); 
+        }
+        printf("\n");
+        start_bucket = start_bucket->next;
+      }
+    }
+  }
 }

@@ -87,4 +87,7 @@ int is_in_array(Array_t documents, int docID);
  * dictionarul pe baza regulilor stabilite. */
 void solve();
 
+/* Afiseaza continutul map-ului */
+void print_map(Map_t *map);
+
 #endif
