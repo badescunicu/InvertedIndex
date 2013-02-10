@@ -87,7 +87,7 @@ int is_in_array(Array_t documents, int docID) {
       return 1;
   return 0;
 }
-
+/* TO DO: daca key-ul nu e in map sa returnez un Array_T "nul"*/
 Array_t get_docs(Map_t *map, char *key) {
   Node_t *start_node;
   start_node = map->buckets[hash((unsigned char*)key) % map->size];
