@@ -6,14 +6,6 @@
 
 
 int main() {
- /* put_doc(map, "test", 4);
-  put_doc(map, "test2", 5);
-  printf("%d %s\n", 
-        map->buckets[hash((unsigned char*)"test") %
-                    NUMBER_OF_BUCKETS]->data->documents.v[0],
-        map->buckets[hash((unsigned char*)"test") %
-                    NUMBER_OF_BUCKETS]->data->word);
-  */
 	solve();
 	return 0;
 }
@@ -100,32 +92,45 @@ Array_t get_docs(Map_t *map, char *key) {
 }
 
 void solve() {
-  FILE *fin = fopen("date.in", "r");
-  int i, lines;
-  char **files, tmp[150];
-  Map_t *map;
+  FILE *fin = fopen("input.in", "r");
+  if(fin) {
+    int i, lines;
+    char **files, tmp[150];
+    Map_t *map;
 
-  map = initialize_map(NUMBER_OF_BUCKETS);
-  fgets(tmp, 150, fin);
-  sscanf(tmp, "%d", &lines);
-  files = (char**)malloc(lines * sizeof(char*));
-  for(i = 0; i < lines; i++) {
+    map = initialize_map(NUMBER_OF_BUCKETS);
     fgets(tmp, 150, fin);
-    tmp[strlen(tmp) - 1] = '\0';
-    files[i] = (char*)malloc((sizeof(tmp) + 1) * sizeof(char));
-    strcpy(files[i], tmp);
-    printf("%s\n", files[i]);
-  }
-  fclose(fin);
+    sscanf(tmp, "%d", &lines);
+    files = (char**)malloc(lines * sizeof(char*));
 
-  for(i = 0; i < lines; i++) {
-    fin = fopen(files[i], "r");
-    while(fscanf(fin, "%s", tmp) != EOF) {
-      put_doc(map, tmp, i);
+    for(i = 0; i < lines; i++) {
+      fgets(tmp, 150, fin);
+      tmp[strlen(tmp) - 1] = '\0';
+      files[i] = (char*)malloc((sizeof(tmp) + 1) * sizeof(char));
+      strcpy(files[i], tmp);
+      printf("%s\n", files[i]);
     }
     fclose(fin);
+
+    for(i = 0; i < lines; i++) {
+      fin = fopen(files[i], "r");
+      if(fin) {
+        while(fscanf(fin, "%s", tmp) != EOF) {
+          put_doc(map, tmp, i);
+        }
+        fclose(fin);
+      }
+      else {
+        printf("Eroare la deschiderea fisierului %s!\n", files[i]);
+      }
+    }
+    print_map(map);
   }
-  print_map(map);
+
+  else {
+    printf("Eroare la deschiderea fisierului input.in!\n");
+  }
+
 }
 
 void print_map(Map_t *map) {
