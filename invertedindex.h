@@ -83,6 +83,8 @@ Entry_t* initialize_entry(char *s, int file_num);
 /* Verifica daca un numar este intr-un Array_t */
 int is_in_array(Array_t documents, int docID);
 
+/* Adauga un element intr-un Array_t */
+void append(Array_t *vector, int value);
 /* Functia ce va contine rezolvarea problemei. Tot aici va fi construit si
  * dictionarul pe baza regulilor stabilite. */
 void solve();
