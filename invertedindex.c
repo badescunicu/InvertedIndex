@@ -294,7 +294,7 @@ void solve() {
       for (k = 0; k <= set1.n; k++) {
         fprintf(fout, " %d", set1.v[k]);
       }
-      fprintf(fout, "%c\n", 13);
+      fprintf(fout, " \n");
     }
 
     fclose(fin);
