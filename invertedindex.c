@@ -230,7 +230,7 @@ void strip_word(char *s) {
 
 void solve() {
   FILE *fin = fopen("input.in", "r");
-  FILE *fout = fopen("output2.out", "w");
+  FILE *fout = fopen("output.out", "w");
   FILE *cur_file;
   Array_t set1, set2;
   if (fin) {
