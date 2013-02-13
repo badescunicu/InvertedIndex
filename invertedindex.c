@@ -6,7 +6,7 @@
 
 
 int main() {
-  Array_t a, b, c;
+/*  Array_t a, b, c; 
   int i;
   a.v = (int*)malloc(10 * sizeof(int));
   b.v = (int*)malloc(10 * sizeof(int));
@@ -22,7 +22,7 @@ int main() {
   c = intersection(a, b);
   for (i = 0; i <= c.n; i++) {
     printf("%d\n", c.v[i]);
-  }
+  }*/
 
   solve();
   return 0;
@@ -202,48 +202,103 @@ void print_map(Map_t *map) {
 }
 
 void append(Array_t *vector, int value) {
-  (vector->n)++;
   if (vector->n == vector->cap - 1) {
     vector->cap *= 2;
     vector->v = realloc(vector->v, vector->cap * sizeof(int));
   }
+  (vector->n)++;
   vector->v[vector->n] = value;
+}
+
+void strip_word(char *s) {
+  char *punc_marks = ",.?!'][}{)(\"";
+  char *aux;
+  int i;
+  i = strlen(s) - 1;
+  while (strchr(punc_marks, s[i])) {
+    i--;
+  }
+  s[i + 1] = '\0';
+
+  i = 0;
+  while (strchr(punc_marks, s[i])) {
+    i++;
+  }
+  aux = strdup(s + i);
+  strcpy(s, aux);
 }
 
 void solve() {
   FILE *fin = fopen("input.in", "r");
+  FILE *fout = fopen("output2.out", "w");
+  FILE *cur_file;
+  Array_t set1, set2;
   if (fin) {
-    int i, lines;
-    char **files, tmp[150];
+    int i, number_of_files, queries, k;
+    char **files, tmp[2000];
+    char *line, *word, *operator;
     Map_t *map;
 
     map = initialize_map(NUMBER_OF_BUCKETS);
-    fgets(tmp, 150, fin);
-    sscanf(tmp, "%d", &lines);
-    files = (char**)malloc(lines * sizeof(char*));
 
-    for (i = 0; i < lines; i++) {
+    /* Citeste nr de fisiere si retine intr-un vector de cuvinte
+     * numele acestora */
+
+    fgets(tmp, 4, fin);
+    sscanf(tmp, "%d", &number_of_files);
+    files = (char**)malloc(number_of_files * sizeof(char*));
+
+    for (i = 0; i < number_of_files; i++) {
       fgets(tmp, 150, fin);
-      tmp[strlen(tmp) - 1] = '\0';
+      line = strtok(tmp, "\r\n");
       files[i] = (char*)malloc((sizeof(tmp) + 1) * sizeof(char));
-      strcpy(files[i], tmp);
-      printf("%s\n", files[i]);
+      strcpy(files[i], line);
     }
-    fclose(fin);
-
-    for (i = 0; i < lines; i++) {
-      fin = fopen(files[i], "r");
-      if (fin) {
-        while (fscanf(fin, "%s", tmp) != EOF) {
+    for (i = 0; i < number_of_files; i++) {
+      cur_file = fopen(files[i], "r");
+      if (cur_file) {
+        while (fscanf(cur_file, "%s", tmp) != EOF) {
+          strip_word(tmp);
           put_doc(map, tmp, i);
         }
-        fclose(fin);
+        fclose(cur_file);
       }
       else {
         printf("Eroare la deschiderea fisierului %s!\n", files[i]);
       }
     }
-    print_map(map);
+
+    fgets(tmp, 2000, fin);
+    sscanf(tmp, "%d", &queries);
+
+    for (i = 0; i < queries; i++) {
+      fgets(tmp, 2000, fin);
+      line = strtok(tmp, "\r\n");
+      fprintf(fout, "%s:", line);
+      word = strtok(line, " \n\r");
+      set1 = get_docs(map, word);
+      operator = strtok(NULL, " \n\r");
+
+      while (operator) {
+        word = strtok(NULL, " \n\r");
+        set2 = get_docs(map, word);
+        if (strcmp(operator, "&") == 0) {
+          set1 = intersection(set1, set2);
+        }
+        else {
+          set1 = reunion(set1, set2);
+        }
+        operator = strtok(NULL, " \n\r");
+      }
+
+      for (k = 0; k <= set1.n; k++) {
+        fprintf(fout, " %d", set1.v[k]);
+      }
+      fprintf(fout, "%c\n", 13);
+    }
+
+    fclose(fin);
+    fclose(fout);
   }
 
   else {

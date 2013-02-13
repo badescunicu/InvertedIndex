@@ -85,6 +85,10 @@ int is_in_array(Array_t documents, int docID);
 
 /* Adauga un element intr-un Array_t */
 void append(Array_t *vector, int value);
+
+/* Sterge caracterele irelevante dintr-un cuvant */
+void strip_word(char *s);
+
 /* Functia ce va contine rezolvarea problemei. Tot aici va fi construit si
  * dictionarul pe baza regulilor stabilite. */
 void solve();
