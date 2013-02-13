@@ -228,7 +228,7 @@ void solve() {
 
     /* Citeste nr de fisiere si retine intr-un vector de cuvinte
      * numele acestora */
-    fgets(tmp, 2000, fin);
+    fgets(tmp, 20, fin);
     sscanf(tmp, "%d", &number_of_files);
     files = (char**)malloc(number_of_files * sizeof(char*));
 
@@ -256,7 +256,7 @@ void solve() {
     }
 
     /* Citeste numarul de interogari*/
-    fgets(tmp, 2000, fin);
+    fgets(tmp, 20, fin);
     sscanf(tmp, "%d", &queries);
 
     /* Proceseaza fiecare interogare, efectuand operatii pe
