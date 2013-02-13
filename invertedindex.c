@@ -223,11 +223,12 @@ void solve() {
     int i, number_of_files, queries, k;
     char **files, tmp[2000];
     char *line, *word, *operator;
-    Map_t *map = initialize_map(NUMBER_OF_BUCKETS);
+    Map_t *map;
+    map = initialize_map(NUMBER_OF_BUCKETS);
 
     /* Citeste nr de fisiere si retine intr-un vector de cuvinte
      * numele acestora */
-    fgets(tmp, 4, fin);
+    fgets(tmp, 2000, fin);
     sscanf(tmp, "%d", &number_of_files);
     files = (char**)malloc(number_of_files * sizeof(char*));
 
@@ -255,7 +256,7 @@ void solve() {
     }
 
     /* Citeste numarul de interogari*/
-    fgets(tmp, 4, fin);
+    fgets(tmp, 2000, fin);
     sscanf(tmp, "%d", &queries);
 
     /* Proceseaza fiecare interogare, efectuand operatii pe
