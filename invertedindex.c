@@ -6,24 +6,6 @@
 
 
 int main() {
-/*  Array_t a, b, c; 
-  int i;
-  a.v = (int*)malloc(10 * sizeof(int));
-  b.v = (int*)malloc(10 * sizeof(int));
-  a.cap = 10;
-  b.cap = 10;
-  a.n = 4;
-  b.n = 4;
-  for (i = 0; i <= 4; i++) {
-    a.v[i] = i;
-    b.v[i] = i + 2;
-  }
-
-  c = intersection(a, b);
-  for (i = 0; i <= c.n; i++) {
-    printf("%d\n", c.v[i]);
-  }*/
-
   solve();
   return 0;
 }
@@ -49,6 +31,7 @@ Entry_t* initialize_entry(char *s, int file_num) {
 }
 
 void put_doc(Map_t *map, char *key, int docID) {
+
   /* Daca bucketul este gol, insereaza primul nod */
   Node_t *bucket = map->buckets[hash((unsigned char*)key) % map->size];
   if (!bucket) {
@@ -57,6 +40,9 @@ void put_doc(Map_t *map, char *key, int docID) {
     bucket->next = NULL;
     map->buckets[hash((unsigned char*)key) % map->size] = bucket;
   }
+
+  /* Altfel, adauga docID la Array_t-ul corespunzator cheii;
+   * creeaza o noua intrare daca cheia nu exista */
   else {
     int found = 0;
     int pos;
@@ -237,23 +223,23 @@ void solve() {
     int i, number_of_files, queries, k;
     char **files, tmp[2000];
     char *line, *word, *operator;
-    Map_t *map;
-
-    map = initialize_map(NUMBER_OF_BUCKETS);
+    Map_t *map = initialize_map(NUMBER_OF_BUCKETS);
 
     /* Citeste nr de fisiere si retine intr-un vector de cuvinte
      * numele acestora */
-
     fgets(tmp, 4, fin);
     sscanf(tmp, "%d", &number_of_files);
     files = (char**)malloc(number_of_files * sizeof(char*));
 
     for (i = 0; i < number_of_files; i++) {
       fgets(tmp, 150, fin);
+      /* Retine in "line" numele fisierului, fara CRLF-ul de la final */
       line = strtok(tmp, "\r\n");
       files[i] = (char*)malloc((sizeof(tmp) + 1) * sizeof(char));
       strcpy(files[i], line);
     }
+
+    /* Parcurge cuvintele din fiecare fisier si le adauga in map */
     for (i = 0; i < number_of_files; i++) {
       cur_file = fopen(files[i], "r");
       if (cur_file) {
@@ -268,11 +254,16 @@ void solve() {
       }
     }
 
-    fgets(tmp, 2000, fin);
+    /* Citeste numarul de interogari*/
+    fgets(tmp, 4, fin);
     sscanf(tmp, "%d", &queries);
 
+    /* Proceseaza fiecare interogare, efectuand operatii pe
+     * vectorii ce contin fisierele in care apar respectivele chei */
     for (i = 0; i < queries; i++) {
       fgets(tmp, 2000, fin);
+
+      /* Retine in "line" interogarea, fara CRLF-ul de la final */
       line = strtok(tmp, "\r\n");
       fprintf(fout, "%s:", line);
       word = strtok(line, " \n\r");
